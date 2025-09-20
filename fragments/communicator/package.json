@@ -1,0 +1,28 @@
+{
+  "name": "clipboard-share-app",
+  "version": "1.0.0",
+  "description": "Share clipboard and screenshots between machines using WebSockets",
+  "main": "app1.js",
+  "scripts": {
+    "start": "node app1.js",
+    "sender": "node app1.js",
+    "receiver": "node app2.js"
+  },
+  "dependencies": {
+    "clipboardy": "^2.3.0",
+    "express": "^4.21.2",
+    "screenshot-desktop": "^1.15.1",
+    "ws": "^8.18.3"
+  },
+  "keywords": [
+    "clipboard",
+    "websocket",
+    "express",
+    "screenshot"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
