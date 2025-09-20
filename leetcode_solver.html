@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode Problem Solver - React</title>
+    
+    <!-- React CDN -->
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Monaco', 'Menlo', monospace;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .problem-section {
+            background: linear-gradient(135deg, #fff5f5, #fed7d7);
+            border-left: 5px solid #e53e3e;
+        }
+        
+        .solution-section {
+            background: linear-gradient(135deg, #f0fff4, #c6f6d5);
+            border-left: 5px solid #38a169;
+        }
+        
+        .execution-section {
+            background: linear-gradient(135deg, #fffaf0, #fbd38d);
+            border-left: 5px solid #d69e2e;
+        }
+        
+        .section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .test-case {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .test-case h4 {
+            color: #2b6cb0;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .output {
+            background: #1a202c;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            min-height: 100px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .step {
+            background: #edf2f7;
+            border-left: 4px solid #4299e1;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .complexity {
+            background: #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #fdcb6e;
+        }
+        
+        .loading {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #718096;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            color: #2d3748;
+            border-bottom-color: #4299e1;
+        }
+        
+        .tab-button:hover {
+            color: #4299e1;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
+        
+        // Test cases data
+        const defaultTestCases = [
+            { nums: [2, 7, 11, 15], target: 9, expected: [0, 1] },
+            { nums: [3, 2, 4], target: 6, expected: [1, 2] },
+            { nums: [3, 3], target: 6, expected: [0, 1] }
+        ];
+        
+        // Default problem data
+        const defaultProblem = {
+            title: "Two Sum",
+            difficulty: "Easy",
+            description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice. You can return the answer in any order.",
+            testCases: defaultTestCases
+        };
+        
+        // Problem Statement Component
+        const ProblemStatement = ({ problem }) => {
+            return (
+                <div className="section problem-section">
+                    <h2>📋 Problem Statement</h2>
+                    <div>
+                        <h3>{problem.title}</h3>
+                        <p><strong>Difficulty:</strong> {problem.difficulty}</p>
+                        <p><strong>Description:</strong> {problem.description}</p>
+                    </div>
+                    
+                    <h3>📝 Sample Test Cases</h3>
+                    {problem.testCases.map((testCase, index) => (
+                        <div key={index} className="test-case">
+                            <h4>Test Case {index + 1}:</h4>
+                            <p><strong>Input:</strong> nums = [{testCase.nums.join(', ')}], target = {testCase.target}</p>
+                            <p><strong>Output:</strong> [{testCase.expected.join(', ')}]</p>
+                            {index === 0 && (
+                                <p><strong>Explanation:</strong> Because nums[{testCase.expected[0]}] + nums[{testCase.expected[1]}] == {testCase.target}, we return [{testCase.expected.join(', ')}].</p>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+        
+        // Solution Component
+        const SolutionSection = () => {
+            const solutionCode = `/**
+ * Two Sum - Hash Map Approach
+ * @param {number[]} nums - Array of integers
+ * @param {number} target - Target sum
+ * @return {number[]} - Indices of two numbers that sum to target
+ */
+function twoSum(nums, target) {
+    // Create a hash map to store value -> index mapping
+    const numMap = new Map();
+    
+    // Iterate through the array once
+    for (let i = 0; i < nums.length; i++) {
+        const currentNum = nums[i];
+        
+        // Calculate what number we need to reach the target
+        const complement = target - currentNum;
+        
+        // Check if we've seen the complement before
+        if (numMap.has(complement)) {
+            // Found the pair! Return indices
+            return [numMap.get(complement), i];
+        }
+        
+        // Store current number and its index for future lookups
+        numMap.set(currentNum, i);
+    }
+    
+    // No solution found (shouldn't happen according to problem constraints)
+    return [];
+}`;
+            
+            return (
+                <div className="section solution-section">
+                    <h2>💡 Solution Approach</h2>
+                    <div className="complexity">
+                        <strong>Time Complexity:</strong> O(n) - Single pass through the array<br />
+                        <strong>Space Complexity:</strong> O(n) - Hash map to store elements
+                    </div>
+                    
+                    <h3>🔍 Algorithm Explanation</h3>
+                    <div className="step">
+                        <strong>Step 1:</strong> Create a hash map to store values and their indices
+                    </div>
+                    <div className="step">
+                        <strong>Step 2:</strong> For each element, calculate the complement (target - current element)
+                    </div>
+                    <div className="step">
+                        <strong>Step 3:</strong> Check if complement exists in hash map
+                    </div>
+                    <div className="step">
+                        <strong>Step 4:</strong> If found, return the indices; otherwise, store current element in hash map
+                    </div>
+                    
+                    <h3>🔧 JavaScript Implementation</h3>
+                    <div className="code-block">
+                        {solutionCode}
+                    </div>
+                </div>
+            );
+        };
+        
+        // Execution Component
+        const ExecutionSection = ({ problem }) => {
+            const [output, setOutput] = useState('Click "Run All Test Cases" to see the results...');
+            const [isLoading, setIsLoading] = useState(false);
+            const [activeTab, setActiveTab] = useState('results');
+            
+            // Two Sum implementation
+            const twoSum = useCallback((nums, target) => {
+                const numMap = new Map();
+                
+                for (let i = 0; i < nums.length; i++) {
+                    const currentNum = nums[i];
+                    const complement = target - currentNum;
+                    
+                    if (numMap.has(complement)) {
+                        return [numMap.get(complement), i];
+                    }
+                    
+                    numMap.set(currentNum, i);
+                }
+                
+                return [];
+            }, []);
+            
+            // Detailed step-by-step execution
+            const twoSumDetailed = useCallback((nums, target) => {
+                const steps = [];
+                const numMap = new Map();
+                
+                steps.push(`🎯 Starting Two Sum algorithm:`);
+                steps.push(`   Array: [${nums.join(', ')}]`);
+                steps.push(`   Target: ${target}`);
+                steps.push(`   Hash Map: {}`);
+                steps.push(``);
+                
+                for (let i = 0; i < nums.length; i++) {
+                    const currentNum = nums[i];
+                    const complement = target - currentNum;
+                    
+                    steps.push(`📍 Step ${i + 1}: Processing index ${i}`);
+                    steps.push(`   Current number: ${currentNum}`);
+                    steps.push(`   Complement needed: ${target} - ${currentNum} = ${complement}`);
+                    
+                    if (numMap.has(complement)) {
+                        const complementIndex = numMap.get(complement);
+                        steps.push(`   ✅ Found complement ${complement} at index ${complementIndex}!`);
+                        steps.push(`   🎉 Solution: [${complementIndex}, ${i}]`);
+                        steps.push(``);
+                        return { result: [complementIndex, i], steps };
+                    } else {
+                        steps.push(`   ❌ Complement ${complement} not found in hash map`);
+                        numMap.set(currentNum, i);
+                        const mapEntries = Array.from(numMap.entries()).map(([k, v]) => `${k}: ${v}`).join(', ');
+                        steps.push(`   📝 Added ${currentNum}: ${i} to hash map`);
+                        steps.push(`   Hash Map: {${mapEntries}}`);
+                    }
+                    steps.push(``);
+                }
+                
+                steps.push(`❌ No solution found`);
+                return { result: [], steps };
+            }, []);
+            
+            const runAllTests = useCallback(() => {
+                setIsLoading(true);
+                setActiveTab('results');
+                
+                // Simulate async execution for better UX
+                setTimeout(() => {
+                    let result = '🧪 Running All Test Cases:\n';
+                    result += '='.repeat(50) + '\n\n';
+                    
+                    problem.testCases.forEach((testCase, index) => {
+                        const { nums, target, expected } = testCase;
+                        const actual = twoSum(nums, target);
+                        const passed = JSON.stringify(actual.sort()) === JSON.stringify(expected.sort());
+                        
+                        result += `Test Case ${index + 1}:\n`;
+                        result += `  Input: nums = [${nums.join(', ')}], target = ${target}\n`;
+                        result += `  Expected: [${expected.join(', ')}]\n`;
+                        result += `  Actual: [${actual.join(', ')}]\n`;
+                        result += `  Status: ${passed ? '✅ PASSED' : '❌ FAILED'}\n\n`;
+                    });
+                    
+                    result += '📊 Performance Analysis:\n';
+                    result += '  Time Complexity: O(n) - Single pass through array\n';
+                    result += '  Space Complexity: O(n) - Hash map storage\n';
+                    result += '  Approach: Hash Map for O(1) lookups\n';
+                    
+                    setOutput(result);
+                    setIsLoading(false);
+                }, 1000);
+            }, [problem.testCases, twoSum]);
+            
+            const runStepByStep = useCallback(() => {
+                setIsLoading(true);
+                setActiveTab('steps');
+                
+                setTimeout(() => {
+                    let result = '🔍 Step-by-Step Execution:\n';
+                    result += '='.repeat(50) + '\n\n';
+                    
+                    problem.testCases.forEach((testCase, index) => {
+                        const { nums, target } = testCase;
+                        const { result: answer, steps } = twoSumDetailed(nums, target);
+                        
+                        result += `📝 Test Case ${index + 1} Walkthrough:\n`;
+                        result += steps.join('\n') + '\n';
+                        result += '-'.repeat(40) + '\n\n';
+                    });
+                    
+                    setOutput(result);
+                    setIsLoading(false);
+                }, 1500);
+            }, [problem.testCases, twoSumDetailed]);
+            
+            const clearOutput = useCallback(() => {
+                setOutput('Output cleared. Click a button above to run tests...');
+                setActiveTab('results');
+            }, []);
+            
+            return (
+                <div className="section execution-section">
+                    <h2>🚀 Interactive Execution</h2>
+                    
+                    <div>
+                        <button 
+                            className="btn" 
+                            onClick={runAllTests}
+                            disabled={isLoading}
+                        >
+                            {isLoading && activeTab === 'results' ? (
+                                <>
+                                    <span className="loading">⏳</span> Running Tests...
+                                </>
+                            ) : (
+                                'Run All Test Cases'
+                            )}
+                        </button>
+                        
+                        <button 
+                            className="btn" 
+                            onClick={runStepByStep}
+                            disabled={isLoading}
+                        >
+                            {isLoading && activeTab === 'steps' ? (
+                                <>
+                                    <span className="loading">⏳</span> Processing...
+                                </>
+                            ) : (
+                                'Step-by-Step Execution'
+                            )}
+                        </button>
+                        
+                        <button 
+                            className="btn" 
+                            onClick={clearOutput}
+                            disabled={isLoading}
+                        >
+                            Clear Output
+                        </button>
+                    </div>
+                    
+                    <div className="tab-buttons">
+                        <button 
+                            className={`tab-button ${activeTab === 'results' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('results')}
+                        >
+                            Test Results
+                        </button>
+                        <button 
+                            className={`tab-button ${activeTab === 'steps' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('steps')}
+                        >
+                            Step-by-Step
+                        </button>
+                    </div>
+                    
+                    <div className="output">
+                        {output}
+                    </div>
+                </div>
+            );
+        };
+        
+        // Main App Component
+        const LeetCodeSolver = () => {
+            const [problem, setProblem] = useState(defaultProblem);
+            
+            // Function to initialize with different problems
+            const initializeProblem = useCallback((problemString) => {
+                if (problemString) {
+                    // This can be extended to parse different problem formats
+                    console.log('Problem loaded:', problemString);
+                    // For now, using default problem
+                }
+            }, []);
+            
+            useEffect(() => {
+                // Initialize on mount
+                // You can pass your problem variable here
+                // initializeProblem(window.leetcodeProblem);
+            }, [initializeProblem]);
+            
+            return (
+                <div className="container">
+                    <div className="header">
+                        <h1>🧠 LeetCode Problem Solver</h1>
+                        <p>Interactive Algorithm Learning Platform - React Edition</p>
+                    </div>
+                    
+                    <div className="content">
+                        <ProblemStatement problem={problem} />
+                        <SolutionSection />
+                        <ExecutionSection problem={problem} />
+                    </div>
+                </div>
+            );
+        };
+        
+        // Render the app using React 18's createRoot API
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<LeetCodeSolver />);
+    </script>
+</body>
+</html>
